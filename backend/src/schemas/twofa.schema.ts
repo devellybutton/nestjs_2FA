@@ -1,19 +1,21 @@
-import { Schema, Document, model } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export interface Twofa extends Document {
-  userId: string; // 해당 사용자 ID
-  secret: string; // 2FA Secret
-  isActive: boolean; // 2FA 활성화 여부
-  createdAt: Date; // 2FA 설정 일자
-  updatedAt: Date; // 2FA 업데이트 일자
+export type TwofaDocument = Twofa & Document;
+
+@Schema({ timestamps: true })
+export class Twofa {
+  /** 회원 ID */
+  @Prop({ required: true, unique: true })
+  userId: string;
+
+  /** 2FA 시크릿 키 (Base32 인코딩)  */
+  @Prop({ required: true })
+  secret: string;
+
+  /** 2FA 활성화 여부 */
+  @Prop({ default: false })
+  isActive: boolean;
 }
 
-const twofaSchema = new Schema<Twofa>({
-  userId: { type: String, required: true, unique: true },
-  secret: { type: String, required: true },
-  isActive: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
-
-export const TwofaModel = model<Twofa>('Twofa', twofaSchema);
+export const TwofaSchema = SchemaFactory.createForClass(Twofa);

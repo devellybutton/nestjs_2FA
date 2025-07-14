@@ -1,23 +1,33 @@
-import { Schema, Document, model } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 
-export interface LoginHistory extends Document {
-  userId: Schema.Types.ObjectId;
+export type LoginHistoryDocument = LoginHistory & Document;
+
+@Schema({ timestamps: { createdAt: true, updatedAt: false } })
+export class LoginHistory {
+  /** 회원 ID */
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
+  userId: MongooseSchema.Types.ObjectId;
+
+  /** IP 주소 */
+  @Prop({ required: true })
   ipAddress: string;
+
+  /** 장치 정보 */
+  @Prop({ required: true })
   device: string;
+
+  /** 브라우저/OS 정보 */
+  @Prop({ required: true })
   userAgent: string;
+
+  /** 의심스러운 로그인 여부 */
+  @Prop({ required: true })
   isSuspicious: boolean;
-  createdAt: Date; // 로그인한 시각
+
+  /** 2FA 사용 여부 */
+  @Prop({ default: false })
+  twofaUsed: boolean;
 }
 
-const loginHistorySchema = new Schema<LoginHistory>(
-  {
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // 사용자 ID,
-    ipAddress: { type: String, required: true }, // IP 주소
-    device: { type: String, required: true }, // 장치 정보
-    userAgent: { type: String, required: true }, // 브라우저/OS 정보
-    isSuspicious: { type: Boolean, required: true }, // 의심스러운 로그인 여부
-  },
-  { timestamps: { createdAt: true, updatedAt: false } },
-);
-
-export const LoginHistoryModel = model<LoginHistory>('LoginHistory', loginHistorySchema);
+export const LoginHistorySchema = SchemaFactory.createForClass(LoginHistory);

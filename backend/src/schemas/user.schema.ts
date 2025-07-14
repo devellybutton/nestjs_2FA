@@ -1,28 +1,35 @@
-import { Schema, Document, model } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export interface User extends Document {
+export type UserDocument = User & Document;
+
+@Schema({ timestamps: true })
+export class User {
+  @Prop({ required: true })
+  /** 사용자 이름 */
   username: string;
+
+  /** 이메일 */
+  @Prop({ required: true, unique: true })
   email: string;
+
+  /** 비밀번호 */
+  @Prop({ required: true })
   password: string;
-  suspiciousLoginCount?: number; // 의심스러운 로그인 횟수
-  lastLoginAt?: Date; // 마지막 접속일
-  createdAt: Date;
-  updatedAt: Date;
+
+  /** 계정 상태 */
+  @Prop({ default: 'active', enum: ['active', 'locked', 'suspended'] })
+  status: string;
+
+  /** 마지막 로그인 IP */
+  @Prop()
+  lastLoginIp: string;
+
+  /** 마지막 로그인 일자 (성공한 로그인만) */
+  @Prop()
+  lastLoginAt: Date;
 }
 
-const userSchema = new Schema<User>(
-  {
-    username: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    suspiciousLoginCount: { type: Number, default: 0 },
-    lastLoginAt: { type: Date },
-  },
-  {
-    timestamps: true,
-  },
-);
+export const UserSchema = SchemaFactory.createForClass(User);
 
-userSchema.index({ email: 1 });
-
-export const UserModel = model<User>('User', userSchema);
+UserSchema.index({ email: 1 });
