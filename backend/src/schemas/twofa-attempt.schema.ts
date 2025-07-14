@@ -1,4 +1,3 @@
-// src/schemas/twofa-attempt.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
@@ -21,6 +20,10 @@ export class TwofaAttempt {
   /** 마지막 2FA 시도 일시 */
   @Prop({ default: Date.now })
   lastAttemptAt: Date;
+
+  /** 실패 카운트 리셋 시각 */
+  @Prop({ default: Date.now })
+  resetAt: Date;
 }
 
 export const TwofaAttemptSchema = SchemaFactory.createForClass(TwofaAttempt);

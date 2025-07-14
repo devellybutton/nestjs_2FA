@@ -1,4 +1,3 @@
-// src/schemas/login-history.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
@@ -29,10 +28,6 @@ export class LoginHistory {
   /** 2FA 사용 여부 */
   @Prop({ default: false })
   twofaUsed: boolean;
-
-  /** 로그인한 시각 */
-  @Prop()
-  createdAt: Date;
 }
 
 export const LoginHistorySchema = SchemaFactory.createForClass(LoginHistory);

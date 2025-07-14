@@ -17,11 +17,15 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  /** 의심스러운 로그인 횟수 */
-  @Prop({ default: 0 })
-  suspiciousLoginCount: number;
+  /** 계정 상태 */
+  @Prop({ default: 'active', enum: ['active', 'locked', 'suspended'] })
+  status: string;
 
-  /** 마지막 로그인 일자 */
+  /** 마지막 로그인 IP */
+  @Prop()
+  lastLoginIp: string;
+
+  /** 마지막 로그인 일자 (성공한 로그인만) */
   @Prop()
   lastLoginAt: Date;
 }

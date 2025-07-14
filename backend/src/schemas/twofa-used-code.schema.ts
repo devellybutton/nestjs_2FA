@@ -18,7 +18,7 @@ export class TwofaUsedCode {
 
   /** 타임스탬프 (30초 뒤 삭제) */
   @Prop({ required: true })
-  timeStamp: number;
+  timestamp: number;
 }
 
 export const TwofaUsedCodeSchema = SchemaFactory.createForClass(TwofaUsedCode);
